@@ -4,7 +4,7 @@ const path = require('path')
 
 const imageStorage = multer.diskStorage({
     // Destination to store image     
-    destination: 'images',
+    destination: 'public/images',
     filename: (req, file, cb) => {
         cb(null, file.fieldname + '_' + Date.now()
             + path.extname(file.originalname))
@@ -28,7 +28,7 @@ const imageUpload = multer({
 })
 
 const videoStorage = multer.diskStorage({
-    destination: 'videos', // Destination to store video 
+    destination: 'public/videos', // Destination to store video 
     filename: (req, file, cb) => {
         cb(null, file.fieldname + '_' + Date.now()
             + path.extname(file.originalname))
