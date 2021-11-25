@@ -1,6 +1,7 @@
 const router = require('express').Router()
 const multer = require('multer');
 const path = require('path')
+const fs = require('fs')
 
 const imageStorage = multer.diskStorage({
     // Destination to store image     
@@ -53,6 +54,13 @@ router.post('/uploadImage', imageUpload.single('image'), (req, res) => {
     res.send(req.file)
 }, (error, req, res, next) => {
     res.status(400).send({ code: 400, error: error.message })
+})
+
+router.delete('/deleteImage', (req, res) => {
+    fs.unlink(`public/images/${req.query.gambar}`, (err) => {
+        if (err) return console.log(err);
+    })
+    res.status(200)
 })
 
 router.post('/uploadBulkImage', imageUpload.array('images', 4), (req, res) => {
