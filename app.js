@@ -3,7 +3,8 @@ const express = require('express');
 const cors = require('cors')
 // const cron = require('node-cron');
 const uploadroute = require('./routes/upload')
-const adminroute = require('./routes/adminroute')
+const adminroute = require('./routes/adminroute');
+const connection = require('./config/database');
 // const sendemail = require('./handlers/sendemail');
 
 
@@ -31,7 +32,21 @@ app.get('/', (req, res) => {
 })
 
 app.get('/status', (req, res) => {
-    res.json(process.env.NODE_ENV)
+    connection.connect((err) => {
+        if (err) {
+            res.json(err)
+            return
+        }
+        res.json({
+            prod: process.env.NODE_ENV,
+            host: process.env.NODE_ENV === 'production' ? process.env.PROD_HOST : process.env.DEV_HOST,
+            user: process.env.NODE_ENV === 'production' ? process.env.PROD_USER : process.env.DEV_USER,
+            password: process.env.NODE_ENV === 'production' ? process.env.PROD_PASS : process.env.DEV_PASS,
+            database: process.env.NODE_ENV === 'production' ? process.env.PROD_DB : process.env.DEV_DB,
+            status: "Koneksi DB Berhasil"
+        })
+    })
+
 })
 
 app.use('/adminroute', adminroute)
