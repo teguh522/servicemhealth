@@ -1,16 +1,17 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors')
-const cron = require('node-cron');
+// const cron = require('node-cron');
 const uploadroute = require('./routes/upload')
+const adminroute = require('./routes/adminroute')
 // const sendemail = require('./handlers/sendemail');
-// const connection = require('./config/database');
+
 
 const app = express()
 const port = process.env.PORT || 4000;
 
 app.use(cors({
-    origin: "https://bundaqita.com",
+    origin: process.env.NODE_ENV === 'production' ? "https://bundaqita.com" : "*",
     methods: "POST,GET,DELETE",
     optionsSuccessStatus: 200
 }))
@@ -32,6 +33,8 @@ app.get('/', (req, res) => {
 app.get('/status', (req, res) => {
     res.json(process.env.NODE_ENV)
 })
+
+app.use('/adminroute', adminroute)
 
 
 app.use('/upload', uploadroute)
