@@ -54,6 +54,13 @@ router.route('/prokes').get((req, res) => {
     }, (error, req, res, next) => {
         res.status(400).send({ code: 400, error: error.message })
     })
+router.route('/prokes/:id').get((req, res) => {
+    connection.query('SELECT * from prokes where id=?', req.params.id, (err, result, fields) => {
+        if (err) res.status(400).json({ message: err })
+        res.json(result)
+    })
+})
+
 
 
 module.exports = router
