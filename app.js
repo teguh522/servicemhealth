@@ -4,11 +4,13 @@ const cors = require('cors')
 // const cron = require('node-cron');
 const uploadroute = require('./routes/upload')
 const adminroute = require('./routes/adminroute');
-const connection = require('./config/database');
+const telekonsultasi = require('./routes/telekonsultasi');
 // const sendemail = require('./handlers/sendemail');
 
-
 const app = express()
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 const port = process.env.PORT || 4000;
 
 app.use(cors({
@@ -26,30 +28,12 @@ app.use(express.static(__dirname + '/public'));
 //     timezone: "Asia/Jakarta"
 // });
 
-
 app.get('/', (req, res) => {
     res.json("Hello!!!")
 })
 
-app.get('/status', (req, res) => {
-    connection.connect((err) => {
-        if (err) {
-            res.json(err)
-            return
-        }
-        res.json({
-            prod: process.env.NODE_ENV,
-            host: process.env.NODE_ENV === 'production' ? process.env.PROD_HOST : process.env.DEV_HOST,
-            user: process.env.NODE_ENV === 'production' ? process.env.PROD_USER : process.env.DEV_USER,
-            password: process.env.NODE_ENV === 'production' ? process.env.PROD_PASS : process.env.DEV_PASS,
-            database: process.env.NODE_ENV === 'production' ? process.env.PROD_DB : process.env.DEV_DB,
-            status: "Koneksi DB Berhasil"
-        })
-    })
-
-})
-
 app.use('/adminroute', adminroute)
+app.use('/telekonsultasi', telekonsultasi)
 
 
 app.use('/upload', uploadroute)
