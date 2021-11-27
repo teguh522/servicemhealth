@@ -21,7 +21,7 @@ router.route('/isichat').get((req, res) => {
         })
 })
 router.route('/isichat/:pasien').get((req, res) => {
-    connection.query('SELECT * FROM chatting where authPasien=? order by id desc limit 1000',
+    connection.query('SELECT * FROM chatting where authPasien=? order by id asc limit 1000',
         req.params.pasien, (err, rows) => {
             if (err) {
                 console.log(err)
