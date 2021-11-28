@@ -15,7 +15,7 @@ const port = process.env.PORT || 4000;
 
 app.use(cors({
     origin: process.env.NODE_ENV === 'production' ? "https://bundaqita.com" : "*",
-    methods: "POST,GET,DELETE",
+    methods: "POST,GET,DELETE,PUT",
     optionsSuccessStatus: 200
 }))
 app.use(express.static(__dirname + '/public'));
