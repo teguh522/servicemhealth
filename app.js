@@ -5,6 +5,7 @@ const cors = require('cors')
 const uploadroute = require('./routes/upload')
 const adminroute = require('./routes/adminroute');
 const telekonsultasi = require('./routes/telekonsultasi');
+const connection = require('./config/database');
 // const sendemail = require('./handlers/sendemail');
 
 const app = express()
@@ -30,6 +31,16 @@ app.use(express.static(__dirname + '/public'));
 
 app.get('/', (req, res) => {
     res.json("Hello!!!")
+})
+
+app.get('/statusdb', (req, res) => {
+    connection.connect((err) => {
+        if (err) {
+            res.json(err.stack)
+            return
+        }
+        res.json("Koneksi Berhasil!")
+    })
 })
 
 app.use('/adminroute', adminroute)
