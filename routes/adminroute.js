@@ -61,6 +61,12 @@ router.route('/prokes/:id').get((req, res) => {
     })
 })
 
-
+router.route('/rujukan').post((req, res) => {
+    connection.query('insert into rujukan(authPasien,authPks,catatan) value(?,?,?)',
+        [req.body.authPasien, req.body.authPks, req.body.catatan], (err, result) => {
+            if (err) res.status(400).json({ message: err })
+            res.status(200).json("berhasil")
+        })
+})
 
 module.exports = router
