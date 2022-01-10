@@ -60,7 +60,7 @@ router.delete('/deleteImage', (req, res) => {
     fs.unlink(`public/images/${req.query.gambar}`, (err) => {
         if (err) return console.log(err);
     })
-    res.status(200)
+    res.status(200).json({ code: "200", message: "Berhasil" })
 })
 
 router.post('/uploadBulkImage', imageUpload.array('images', 4), (req, res) => {

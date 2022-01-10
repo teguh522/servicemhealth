@@ -46,11 +46,19 @@ router.route('/prokes').get((req, res) => {
         })
     })
     .post(imageUpload.single('image'), (req, res) => {
-        connection.query('insert into prokes(judul,deskripsi,gambar,urlvideo) value(?,?,?,?)',
-            [req.body.judul, req.body.deskripsi, req.file.filename, req.body.urlvideo], (err, result) => {
-                if (err) res.status(400).json({ message: err })
-                res.status(200).json("berhasil")
-            })
+        if (req.file) {
+            connection.query('insert into prokes(judul,deskripsi,gambar,urlvideo) value(?,?,?,?)',
+                [req.body.judul, req.body.deskripsi, req.file.filename, req.body.urlvideo], (err, result) => {
+                    if (err) res.status(400).json({ message: err })
+                    res.status(200).json("berhasil")
+                })
+        } else {
+            connection.query('insert into prokes(judul,deskripsi,urlvideo) value(?,?,?)',
+                [req.body.judul, req.body.deskripsi, req.body.urlvideo], (err, result) => {
+                    if (err) res.status(400).json({ message: err })
+                    res.status(200).json("berhasil")
+                })
+        }
     }, (error, req, res, next) => {
         res.status(400).send({ code: 400, error: error.message })
     })
@@ -59,6 +67,32 @@ router.route('/prokes/:id').get((req, res) => {
         if (err) res.status(400).json({ message: err })
         res.json(result)
     })
+})
+
+router.route('/prokesupdate/:id').post(imageUpload.single('image'), (req, res) => {
+    if (req.file) {
+        connection.query('SELECT * from prokes where id=?', req.params.id, (err, result, fields) => {
+            if (err) res.status(400).json({ message: err })
+            fs.unlink(`public/images/${result[0].gambar}`, (err) => {
+                if (err) return console.log(err);
+            })
+            connection.query('update prokes set judul=?,deskripsi=?,gambar=?,urlvideo=? where id=?',
+                [req.body.judul, req.body.deskripsi, req.file.filename, req.body.urlvideo, req.params.id], (err, result) => {
+                    if (err) res.status(400).json({ message: err })
+                    res.status(200).json("berhasil")
+                })
+        })
+
+    } else {
+        connection.query('update prokes set judul=?,deskripsi=?,urlvideo=? where id=?',
+            [req.body.judul, req.body.deskripsi, req.body.urlvideo, req.params.id], (err, result) => {
+                if (err) res.status(400).json({ message: err })
+                res.status(200).json("berhasil")
+            })
+    }
+
+}, (error, req, res, next) => {
+    res.status(400).send({ code: 400, error: error.message })
 })
 
 router.route('/rujukan').post((req, res) => {
